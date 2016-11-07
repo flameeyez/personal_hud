@@ -34,8 +34,12 @@ namespace personal_hud
         WeatherData data;
         List<Panel> Panels = new List<Panel>();
 
-        int x = 0;
-        int y = 0;
+        Panel currentPanel;
+
+        int mouseX = 0;
+        int mouseY = 0;
+        int currentPanelOffsetX = 0;
+        int currentPanelOffsetY = 0;
 
         public MainPage()
         {
@@ -43,11 +47,11 @@ namespace personal_hud
         }
 
         private async void canvasMain_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args) {
-            foreach(Panel panel in Panels) {
-                panel.Draw(args, panel.HitTest(x, y));
+            for (int i = Panels.Count - 1; i >= 0; i--) {
+                Panels[i].Draw(args, Panels[i].HitTest(mouseX, mouseY));
             }
             
-            args.DrawingSession.DrawText(x.ToString() + ", " + y.ToString(), new Vector2(1500, 10), Colors.White);
+            args.DrawingSession.DrawText(mouseX.ToString() + ", " + mouseY.ToString(), new Vector2(1500, 10), Colors.White);
         }
 
         private void canvasMain_Update(ICanvasAnimatedControl sender, CanvasAnimatedUpdateEventArgs args) {
@@ -115,29 +119,52 @@ namespace personal_hud
             data.ForecastURL = stuff.current_observation.forecast_url;
             data.HistoryURL = stuff.current_observation.history_url;
 
-            Panel p1 = new Panel(canvasMain.Device, new Vector2(100, 100), 500, 300, "Test panel 1", Colors.Blue);
-            p1.Strings.Add("test string 1");
-            p1.Strings.Add("test string 2");
-            Panels.Add(p1);
-
-            Panel p2 = new Panel(canvasMain.Device, new Vector2(500, 500), 300, 200, "Test panel 2", Colors.Red);
-            p2.Strings.Add("test string 3");
-            p2.Strings.Add("test string 4");
-            Panels.Add(p2);
+            int nStringIndex = 1;
+            Random r = new Random(DateTime.Now.Millisecond);
+            for(int i = 0; i < 10; i++) {
+                byte red = (byte)r.Next(150);
+                byte green = (byte)r.Next(150);
+                byte blue = (byte)r.Next(150);
+                Color color = Color.FromArgb(255, red, green, blue);
+                Panel panel = new Panel(canvasMain.Device, new Vector2(r.Next(1500), r.Next(800)), 200 + r.Next(500), 200 + r.Next(300), "Test panel " + (i + 1).ToString(), color);
+                for (int j = 0; j < 5; j++) {
+                    panel.Strings.Add("Test string " + nStringIndex.ToString());
+                    nStringIndex++;
+                }
+                Panels.Add(panel);
+            }
         }
 
         private void canvasMain_PointerMoved(object sender, PointerRoutedEventArgs e) {
             PointerPoint p = e.GetCurrentPoint(canvasMain);
-            x = (int)p.Position.X;
-            y = (int)p.Position.Y;
+            mouseX = (int)p.Position.X;
+            mouseY = (int)p.Position.Y;
+
+            if(currentPanel != null) {
+                currentPanel.Position = new Vector2(mouseX - currentPanelOffsetX, mouseY - currentPanelOffsetY);
+            }
         }
 
         private void canvasMain_PointerPressed(object sender, PointerRoutedEventArgs e) {
+            PointerPoint p = e.GetCurrentPoint(canvasMain);
+            int x = (int)p.Position.X;
+            int y = (int)p.Position.Y;
 
+            for(int i = 0; i < Panels.Count; i++) {
+                if (Panels[i].HitTest(x, y)) {
+                    currentPanel = Panels[i];
+                    currentPanelOffsetX = mouseX - (int)currentPanel.Position.X;
+                    currentPanelOffsetY = mouseY - (int)currentPanel.Position.Y;
+
+                    Panels.RemoveAt(i);
+                    Panels.Insert(0, currentPanel);
+                    return;
+                }
+            }
         }
 
         private void canvasMain_PointerReleased(object sender, PointerRoutedEventArgs e) {
-
+            currentPanel = null;
         }
     }
 }

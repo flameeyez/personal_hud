@@ -13,6 +13,13 @@ using Windows.UI;
 namespace personal_hud {
     class Panel {
         private Vector2 _position;
+        public Vector2 Position {
+            get { return _position; }
+            set {
+                _position = value;
+                RecalculateLayout();
+            }
+        }
         private double _width;
         private double _height;
         private CanvasTextLayout _titleTextLayout;
@@ -31,18 +38,20 @@ namespace personal_hud {
         private static float _PADDING = 5.0f;
 
         public Panel(CanvasDevice device, Vector2 position, double width, double height, string title, Color backgroundColor) {
-            _position = position;
             _width = width;
             _height = height;
+            _backgroundColor = backgroundColor;
             _titleTextLayout = new CanvasTextLayout(device, title, Statics.Arial14NoWrap, 0, 0);
 
-            _titlePosition = new Vector2(_position.X + _PADDING, _position.Y + _PADDING);
-            _barLeft = new Vector2(position.X, _titlePosition.Y + (float)_titleTextLayout.LayoutBounds.Height + _PADDING);
-            _barRight = new Vector2(position.X + (float)width, _titlePosition.Y + (float)_titleTextLayout.LayoutBounds.Height + _PADDING);
-            _stringsPosition = new Vector2(_position.X + _PADDING, _titlePosition.Y + (float)_titleTextLayout.LayoutBounds.Height + _PADDING * 3);
+            Position = position;
+        }
 
-            _backgroundRect = new Rect(_position.X, _position.Y, _width, _height);
-            _backgroundColor = backgroundColor;
+        private void RecalculateLayout() {
+            _backgroundRect = new Rect(Position.X, Position.Y, _width, _height);
+            _titlePosition = new Vector2(Position.X + _PADDING, Position.Y + _PADDING);
+            _barLeft = new Vector2(Position.X, _titlePosition.Y + (float)_titleTextLayout.LayoutBounds.Height + _PADDING);
+            _barRight = new Vector2(Position.X + (float)_width, _titlePosition.Y + (float)_titleTextLayout.LayoutBounds.Height + _PADDING);
+            _stringsPosition = new Vector2(Position.X + _PADDING, _titlePosition.Y + (float)_titleTextLayout.LayoutBounds.Height + _PADDING * 3);
         }
 
         public void Draw(CanvasAnimatedDrawEventArgs args, bool bMouseOver) {
@@ -53,11 +62,11 @@ namespace personal_hud {
         }
 
         private void DrawBackground(CanvasAnimatedDrawEventArgs args, bool bMouseOver) {
-            args.DrawingSession.FillRectangle(_backgroundRect, bMouseOver ? Colors.Green : _backgroundColor);
+            args.DrawingSession.FillRectangle(new Rect(Position.X, Position.Y, _width, _height), bMouseOver ? Colors.Green : _backgroundColor);
         }
 
         private void DrawBorder(CanvasAnimatedDrawEventArgs args) {
-            args.DrawingSession.DrawRoundedRectangle(_backgroundRect, 1, 1, Colors.White);
+            args.DrawingSession.DrawRoundedRectangle(new Rect(Position.X, Position.Y, _width, _height), 1, 1, Colors.White);
         }
 
         private void DrawTitle(CanvasAnimatedDrawEventArgs args) {
@@ -78,10 +87,10 @@ namespace personal_hud {
         }
 
         public bool HitTest(int x, int y) {
-            if(_position.X > x) { return false; }
-            if(_position.X + _width < x) { return false; }
-            if(_position.Y > y) { return false; }
-            if(_position.Y + _height < y) { return false; }
+            if(Position.X > x) { return false; }
+            if(Position.X + _width < x) { return false; }
+            if(Position.Y > y) { return false; }
+            if(Position.Y + _height < y) { return false; }
             return true;
         }
     }
