@@ -22,6 +22,7 @@ using Windows.UI.Xaml.Navigation;
 
 using personal_hud.current_weather;
 using personal_hud.forecast;
+using Microsoft.Graphics.Canvas;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -132,6 +133,12 @@ namespace personal_hud {
             catch (Exception exception) {
                 throw;
             }
+
+            args.TrackAsyncAction(CreateResourcesAsync(sender).AsAsyncAction());
+        }
+
+        private async Task CreateResourcesAsync(CanvasAnimatedControl sender) {
+            
         }
 
         private void canvasMain_PointerMoved(object sender, PointerRoutedEventArgs e) {
