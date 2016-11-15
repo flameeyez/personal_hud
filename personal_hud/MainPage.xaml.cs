@@ -61,7 +61,6 @@ namespace personal_hud {
                 currentWeather = CurrentWeather.Refresh();
                 currentForecast10Day = Forecast10Day.Refresh();
 
-                int nStringIndex = 1;
                 Random r = new Random(DateTime.Now.Millisecond);
 
                 byte red = (byte)r.Next(150);
@@ -73,46 +72,62 @@ namespace personal_hud {
                 panelCurrentWeather.Strings.Add(currentWeather.ToString());
                 Panels.Add(panelCurrentWeather);
 
-                int x = 100;
-                int y = 500;
+                int clientwidth = 1920;
+
                 int width = 200;
-                int height = 300;
+                int height = 200;
                 int padding = 10;
+
+                int nNumPanelsX = Math.Min(clientwidth / width, 7);
+                int nPanelsWidth = nNumPanelsX * (width + padding);
+
+                int initialx = (clientwidth - nPanelsWidth) / 2;
+                int x = initialx;
+                int y = 300;
+
+                int nCurrentPanelX = 0;
 
                 Panel panelForecastDay0 = new Panel(canvasMain.Device, new Vector2(x, y), width, height, "Forecast Day 0", color);
                 panelForecastDay0.Strings.Add(currentForecast10Day.Forecast.SimpleForecast.ForecastDay[0].ToString());
                 Panels.Add(panelForecastDay0);
-                x += width + padding;
+
+                x += width + padding; if (++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
 
                 Panel panelForecastDay1 = new Panel(canvasMain.Device, new Vector2(x, y), width, height, "Forecast Day 1", color);
                 panelForecastDay1.Strings.Add(currentForecast10Day.Forecast.SimpleForecast.ForecastDay[1].ToString());
                 Panels.Add(panelForecastDay1);
-                x += width + padding;
+
+                x += width + padding; if (++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
 
                 Panel panelForecastDay2 = new Panel(canvasMain.Device, new Vector2(x, y), width, height, "Forecast Day 2", color);
                 panelForecastDay2.Strings.Add(currentForecast10Day.Forecast.SimpleForecast.ForecastDay[2].ToString());
                 Panels.Add(panelForecastDay2);
-                x += width + padding;
+
+                x += width + padding; if (++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
 
                 Panel panelForecastDay3 = new Panel(canvasMain.Device, new Vector2(x, y), width, height, "Forecast Day 3", color);
                 panelForecastDay3.Strings.Add(currentForecast10Day.Forecast.SimpleForecast.ForecastDay[3].ToString());
                 Panels.Add(panelForecastDay3);
-                x += width + padding;
+
+                x += width + padding; if (++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
 
                 Panel panelForecastDay4 = new Panel(canvasMain.Device, new Vector2(x, y), width, height, "Forecast Day 4", color);
                 panelForecastDay4.Strings.Add(currentForecast10Day.Forecast.SimpleForecast.ForecastDay[4].ToString());
                 Panels.Add(panelForecastDay4);
-                x += width + padding;
+
+                x += width + padding; if (++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
 
                 Panel panelForecastDay5 = new Panel(canvasMain.Device, new Vector2(x, y), width, height, "Forecast Day 5", color);
                 panelForecastDay5.Strings.Add(currentForecast10Day.Forecast.SimpleForecast.ForecastDay[5].ToString());
                 Panels.Add(panelForecastDay5);
-                x += width + padding;
+
+                x += width + padding; if (++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
 
                 Panel panelForecastDay6 = new Panel(canvasMain.Device, new Vector2(x, y), width, height, "Forecast Day 6", color);
                 panelForecastDay6.Strings.Add(currentForecast10Day.Forecast.SimpleForecast.ForecastDay[6].ToString());
                 Panels.Add(panelForecastDay6);
-                x += width + padding;
+
+                x += width + padding; if (++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
             }
             catch (Exception exception) {
                 throw;
