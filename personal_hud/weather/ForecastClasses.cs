@@ -127,8 +127,13 @@ namespace personal_hud.forecast {
         public int MaxHumidity { get; set; }
         public int MinHumidity { get; set; }
 
+        public string DateFull { get { return Date.Weekday + ", " + Date.MonthName + " " + Date.Day + ", " + Date.Year; } }
+        public string HighFull { get { return High.Fahrenheit + (char)176; } }
+
         public override string ToString() {
-            return Date.Weekday;
+            StringBuilder sb = new StringBuilder();
+            sb.Append(DateFull);
+            return sb.ToString();
         }
     }
 

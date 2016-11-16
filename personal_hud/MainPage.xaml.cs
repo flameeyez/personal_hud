@@ -69,66 +69,45 @@ namespace personal_hud {
                 byte blue = (byte)r.Next(150);
                 Color color = Color.FromArgb(255, red, green, blue);
 
-                Panel panelCurrentWeather = new Panel(canvasMain.Device, new Vector2(100, 100), 300, 300, "Current Weather", color);
-                panelCurrentWeather.Strings.Add(currentWeather.ToString());
-                Panels.Add(panelCurrentWeather);
+                //Panel panelCurrentWeather = new Panel(canvasMain.Device, new Vector2(100, 100), 300, 300, "Current Weather", color);
+                //panelCurrentWeather.Strings.Add(currentWeather.ToString());
+                //Panels.Add(panelCurrentWeather);
 
-                int clientwidth = 1920;
+                //int clientwidth = 1920;
 
-                int width = 200;
-                int height = 200;
-                int padding = 10;
+                //int width = 400;
+                //int height = 200;
+                //int padding = 10;
 
-                int nNumPanelsX = Math.Min(clientwidth / width, 7);
-                int nPanelsWidth = nNumPanelsX * (width + padding);
+                //int nNumPanelsX = Math.Min(clientwidth / width, 7);
+                //int nPanelsWidth = nNumPanelsX * (width + padding);
 
-                int initialx = (clientwidth - nPanelsWidth) / 2;
-                int x = initialx;
-                int y = 300;
+                //int initialx = (clientwidth - nPanelsWidth) / 2;
+                //int x = initialx;
+                //int y = 300;
 
-                int nCurrentPanelX = 0;
+                //int nCurrentPanelX = 0;
 
-                Panel panelForecastDay0 = new Panel(canvasMain.Device, new Vector2(x, y), width, height, "Forecast Day 0", color);
-                panelForecastDay0.Strings.Add(currentForecast10Day.Forecast.SimpleForecast.ForecastDay[0].ToString());
-                Panels.Add(panelForecastDay0);
-
-                x += width + padding; if (++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
-
-                Panel panelForecastDay1 = new Panel(canvasMain.Device, new Vector2(x, y), width, height, "Forecast Day 1", color);
-                panelForecastDay1.Strings.Add(currentForecast10Day.Forecast.SimpleForecast.ForecastDay[1].ToString());
-                Panels.Add(panelForecastDay1);
-
-                x += width + padding; if (++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
-
-                Panel panelForecastDay2 = new Panel(canvasMain.Device, new Vector2(x, y), width, height, "Forecast Day 2", color);
-                panelForecastDay2.Strings.Add(currentForecast10Day.Forecast.SimpleForecast.ForecastDay[2].ToString());
-                Panels.Add(panelForecastDay2);
-
-                x += width + padding; if (++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
-
-                Panel panelForecastDay3 = new Panel(canvasMain.Device, new Vector2(x, y), width, height, "Forecast Day 3", color);
-                panelForecastDay3.Strings.Add(currentForecast10Day.Forecast.SimpleForecast.ForecastDay[3].ToString());
-                Panels.Add(panelForecastDay3);
-
-                x += width + padding; if (++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
-
-                Panel panelForecastDay4 = new Panel(canvasMain.Device, new Vector2(x, y), width, height, "Forecast Day 4", color);
-                panelForecastDay4.Strings.Add(currentForecast10Day.Forecast.SimpleForecast.ForecastDay[4].ToString());
-                Panels.Add(panelForecastDay4);
-
-                x += width + padding; if (++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
-
-                Panel panelForecastDay5 = new Panel(canvasMain.Device, new Vector2(x, y), width, height, "Forecast Day 5", color);
-                panelForecastDay5.Strings.Add(currentForecast10Day.Forecast.SimpleForecast.ForecastDay[5].ToString());
-                Panels.Add(panelForecastDay5);
-
-                x += width + padding; if (++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
-
-                Panel panelForecastDay6 = new Panel(canvasMain.Device, new Vector2(x, y), width, height, "Forecast Day 6", color);
-                panelForecastDay6.Strings.Add(currentForecast10Day.Forecast.SimpleForecast.ForecastDay[6].ToString());
-                Panels.Add(panelForecastDay6);
-
-                x += width + padding; if (++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
+                //Panels.Add(new Panel(canvasMain.Device, new Vector2(x, y), width, height, currentForecast10Day.Forecast.SimpleForecast.ForecastDay[0].DateFull, color));
+                //x += width + padding; if (++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
+                //Panels.Add(new Panel(canvasMain.Device, new Vector2(x, y), width, height, currentForecast10Day.Forecast.SimpleForecast.ForecastDay[1].DateFull, color));
+                //x += width + padding; if(++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
+                //Panels.Add(new Panel(canvasMain.Device, new Vector2(x, y), width, height, currentForecast10Day.Forecast.SimpleForecast.ForecastDay[2].DateFull, color));
+                //x += width + padding; if(++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
+                //Panels.Add(new Panel(canvasMain.Device, new Vector2(x, y), width, height, currentForecast10Day.Forecast.SimpleForecast.ForecastDay[3].DateFull, color));
+                //x += width + padding; if(++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
+                //Panels.Add(new Panel(canvasMain.Device, new Vector2(x, y), width, height, currentForecast10Day.Forecast.SimpleForecast.ForecastDay[4].DateFull, color));
+                //x += width + padding; if(++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
+                //Panels.Add(new Panel(canvasMain.Device, new Vector2(x, y), width, height, currentForecast10Day.Forecast.SimpleForecast.ForecastDay[5].DateFull, color));
+                //x += width + padding; if(++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
+                //Panels.Add(new Panel(canvasMain.Device, new Vector2(x, y), width, height, currentForecast10Day.Forecast.SimpleForecast.ForecastDay[6].DateFull, color));
+                //x += width + padding; if(++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
+                //Panels.Add(new Panel(canvasMain.Device, new Vector2(x, y), width, height, currentForecast10Day.Forecast.SimpleForecast.ForecastDay[7].DateFull, color));
+                //x += width + padding; if(++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
+                //Panels.Add(new Panel(canvasMain.Device, new Vector2(x, y), width, height, currentForecast10Day.Forecast.SimpleForecast.ForecastDay[8].DateFull, color));
+                //x += width + padding; if(++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
+                //Panels.Add(new Panel(canvasMain.Device, new Vector2(x, y), width, height, currentForecast10Day.Forecast.SimpleForecast.ForecastDay[9].DateFull, color));
+                //x += width + padding; if(++nCurrentPanelX == nNumPanelsX) { x = initialx; y += height + padding; nCurrentPanelX = 0; }
             }
             catch (Exception exception) {
                 throw;
