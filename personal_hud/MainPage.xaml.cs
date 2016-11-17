@@ -36,6 +36,8 @@ namespace personal_hud {
         Forecast10Day currentForecast10Day;
         Panel currentPanel;
 
+        AnimatedSprite sun;
+
         int mouseX = 0;
         int mouseY = 0;
         int currentPanelOffsetX = 0;
@@ -51,10 +53,11 @@ namespace personal_hud {
             }
 
             args.DrawingSession.DrawText(mouseX.ToString() + ", " + mouseY.ToString(), new Vector2(1500, 10), Colors.White);
+            sun.Draw(args);
         }
 
         private void canvasMain_Update(ICanvasAnimatedControl sender, CanvasAnimatedUpdateEventArgs args) {
-
+            sun.Update(args);
         }
 
         private void canvasMain_CreateResources(CanvasAnimatedControl sender, CanvasCreateResourcesEventArgs args) {
@@ -117,7 +120,8 @@ namespace personal_hud {
         }
 
         private async Task CreateResourcesAsync(CanvasAnimatedControl sender) {
-            
+            CanvasBitmap bitmapSun = await CanvasBitmap.LoadAsync(sender, "images/sun.png");
+            sun = new AnimatedSprite(bitmapSun, new Vector2(200, 200), 256, 256, 16, 200.0);
         }
 
         private void canvasMain_PointerMoved(object sender, PointerRoutedEventArgs e) {
