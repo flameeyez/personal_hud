@@ -7,16 +7,14 @@ using System.Threading.Tasks;
 using Windows.UI.Input;
 
 namespace personal_hud {
-    static class Statics {
+    static class Fonts {
         public static CanvasTextFormat PressStart2P12Wrap;
         public static CanvasTextFormat PressStart2P12NoWrap;
 
         public static CanvasTextFormat PressStart2P14Wrap;
         public static CanvasTextFormat PressStart2P14NoWrap;
 
-        public static PointerPoint MouseCoordinates;
-
-        static Statics() {
+        static Fonts() {
             PressStart2P12Wrap = new CanvasTextFormat();
             PressStart2P12Wrap.FontFamily = "Press Start 2P";
             PressStart2P12Wrap.FontSize = 12;

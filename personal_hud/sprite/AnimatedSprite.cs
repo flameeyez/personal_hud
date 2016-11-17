@@ -9,23 +9,13 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 
 namespace personal_hud {
-    class AnimatedSprite {
-        private CanvasBitmap _canvasBitmap;
+    class AnimatedSprite : Sprite {
         private double _frameThreshold;
         private double _elapsedFrameTime;
         private int _currentFrame;
-
-        public Vector2 Position { get; set; }
-        public double Width { get; set; }
-        public double Height { get; set; }
-
         public List<Rect> Frames = new List<Rect>();
 
-        public AnimatedSprite(CanvasBitmap canvasBitmap, Vector2 position, double width, double height, int frameResolution, double frameThreshold = 200.0) {
-            _canvasBitmap = canvasBitmap;
-            Position = position;
-            Width = width;
-            Height = height;
+        public AnimatedSprite(CanvasBitmap canvasBitmap, Vector2 position, double width, double height, int frameResolution, double frameThreshold = 200.0) : base(canvasBitmap, position, width, height) {
             _frameThreshold = frameThreshold;
 
             int frameCountX = (int)canvasBitmap.Bounds.Width / frameResolution;
@@ -37,11 +27,11 @@ namespace personal_hud {
             }
         }
 
-        public void Draw(CanvasAnimatedDrawEventArgs args) {
+        public override void Draw(CanvasAnimatedDrawEventArgs args) {
             args.DrawingSession.DrawImage(_canvasBitmap, new Rect(Position.X, Position.Y, Width, Height), Frames[_currentFrame], 1.0f, CanvasImageInterpolation.NearestNeighbor);
         }
 
-        public void Update(CanvasAnimatedUpdateEventArgs args) {
+        public override void Update(CanvasAnimatedUpdateEventArgs args) {
             _elapsedFrameTime += args.Timing.ElapsedTime.TotalMilliseconds;
             if (_elapsedFrameTime >= _frameThreshold) {
                 _elapsedFrameTime = 0.0;
