@@ -32,43 +32,30 @@ namespace personal_hud {
     /// </summary>
     public sealed partial class MainPage : Page {
         List<Panel> Panels = new List<Panel>();
-        //CurrentWeather currentWeather;
-        //Forecast10Day currentForecast10Day;
-
-        //Panel currentPanel;
-
         AnimatedSprite sun;
 
         int mouseX = 0;
         int mouseY = 0;
-        int currentPanelOffsetX = 0;
-        int currentPanelOffsetY = 0;
 
         public MainPage() {
             this.InitializeComponent();
         }
 
         private void canvasMain_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args) {
-            for (int i = Panels.Count - 1; i >= 0; i--) {
+            for(int i = Panels.Count - 1; i >= 0; i--) {
                 Panels[i].Draw(args, Panels[i].HitTest(mouseX, mouseY));
             }
 
             args.DrawingSession.DrawText(mouseX.ToString() + ", " + mouseY.ToString(), new Vector2(1500, 10), Colors.White);
-            //sun.Draw(args);
+            sun.Draw(args);
         }
 
         private void canvasMain_Update(ICanvasAnimatedControl sender, CanvasAnimatedUpdateEventArgs args) {
-            //sun.Update(args);
+            sun.Update(args);
         }
 
         private void canvasMain_CreateResources(CanvasAnimatedControl sender, CanvasCreateResourcesEventArgs args) {
-            try {
-                Panels.Add(new PanelCurrentSnapshot(sender.Device, new Vector2(200, 200), 400, 400));
-            }
-            catch (Exception) {
-                throw;
-            }
-
+            Panels.Add(new PanelCurrentWeatherSnapshot(sender.Device, new Vector2(200, 200), 400, 400));
             args.TrackAsyncAction(CreateResourcesAsync(sender).AsAsyncAction());
         }
 
@@ -90,7 +77,7 @@ namespace personal_hud {
         }
 
         private void canvasMain_PointerReleased(object sender, PointerRoutedEventArgs e) {
-            
+
         }
     }
 }

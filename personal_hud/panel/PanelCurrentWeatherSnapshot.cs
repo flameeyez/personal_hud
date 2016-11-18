@@ -12,7 +12,7 @@ using Windows.Foundation;
 using Windows.UI;
 
 namespace personal_hud {
-    class PanelCurrentSnapshot : Panel {
+    class PanelCurrentWeatherSnapshot : Panel {
         private CurrentWeather _currentWeatherData;
 
         private CanvasTextLayout _titleTextLayout;
@@ -22,16 +22,14 @@ namespace personal_hud {
         protected Vector2 _barLeft;
         protected Vector2 _barRight;
 
-        //public List<string> Strings = new List<string>();
-        //protected Vector2 _stringsPosition;
-
         private Vector2 timeStringPosition;
 
-        public PanelCurrentSnapshot(CanvasDevice device, Vector2 position, double width, double height)
+        public PanelCurrentWeatherSnapshot(CanvasDevice device, Vector2 position, double width, double height)
             : base(device, position, width, height) {
 
             RefreshWeatherData();
             _backgroundColor = Color.FromArgb(255, 0, 0, 255);
+            _backgroundRect = new Rect(Position.X, Position.Y, _width, _height);
             _titleTextLayout = new CanvasTextLayout(device, _currentWeatherData.Current_Observation.Display_Location.Full, Fonts.PressStart2P14NoWrap, 0, 0);
             RecalculateLayout();
         }
@@ -46,16 +44,12 @@ namespace personal_hud {
             }
 
             timeStringPosition = new Vector2(Position.X + _PADDING, _barLeft.Y + _PADDING);
-
-            //_stringsPosition = new Vector2(Position.X + _PADDING, _titlePosition.Y + (float)_titleTextLayout.LayoutBounds.Height + _PADDING * 3);
         }
 
         public override void Draw(CanvasAnimatedDrawEventArgs args, bool bMouseOver) {
             DrawBackground(args, bMouseOver);
             DrawBorder(args);
             DrawTitle(args);
-            //DrawStrings(args);
-
             DrawCurrentTime(args);
         }
 
@@ -68,7 +62,7 @@ namespace personal_hud {
         }
 
         private void DrawBackground(CanvasAnimatedDrawEventArgs args, bool bMouseOver) {
-            args.DrawingSession.FillRectangle(new Rect(Position.X, Position.Y, _width, _height), bMouseOver ? Colors.Green : _backgroundColor);
+            args.DrawingSession.FillRectangle(_backgroundRect, bMouseOver ? Colors.Green : _backgroundColor);
         }
 
         private void DrawBorder(CanvasAnimatedDrawEventArgs args) {
@@ -83,13 +77,5 @@ namespace personal_hud {
         public void RefreshWeatherData() {
             _currentWeatherData = CurrentWeather.Refresh();
         }
-
-        //private void DrawStrings(CanvasAnimatedDrawEventArgs args) {
-        //    float y = _stringsPosition.Y;
-        //    foreach (string str in Strings) {
-        //        args.DrawingSession.DrawText(str, new Vector2(_stringsPosition.X, y), Colors.White, Fonts.PressStart2P12NoWrap);
-        //        y += 20.0f;
-        //    }
-        //}
     }
 }
