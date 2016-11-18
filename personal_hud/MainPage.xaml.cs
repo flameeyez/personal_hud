@@ -32,7 +32,7 @@ namespace personal_hud {
     /// </summary>
     public sealed partial class MainPage : Page {
         List<Panel> Panels = new List<Panel>();
-        AnimatedSprite sun;
+        List<AnimatedSprite> AnimatedSprites = new List<AnimatedSprite>();
 
         int mouseX = 0;
         int mouseY = 0;
@@ -42,16 +42,21 @@ namespace personal_hud {
         }
 
         private void canvasMain_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args) {
-            for(int i = Panels.Count - 1; i >= 0; i--) {
+            for (int i = Panels.Count - 1; i >= 0; i--) {
                 Panels[i].Draw(args, Panels[i].HitTest(mouseX, mouseY));
             }
 
             args.DrawingSession.DrawText(mouseX.ToString() + ", " + mouseY.ToString(), new Vector2(1500, 10), Colors.White);
-            sun.Draw(args);
+
+            foreach (AnimatedSprite animatedSprite in AnimatedSprites) {
+                animatedSprite.Draw(args);
+            }
         }
 
         private void canvasMain_Update(ICanvasAnimatedControl sender, CanvasAnimatedUpdateEventArgs args) {
-            sun.Update(args);
+            foreach (AnimatedSprite animatedSprite in AnimatedSprites) {
+                animatedSprite.Update(args);
+            }
         }
 
         private void canvasMain_CreateResources(CanvasAnimatedControl sender, CanvasCreateResourcesEventArgs args) {
@@ -60,8 +65,21 @@ namespace personal_hud {
         }
 
         private async Task CreateResourcesAsync(CanvasAnimatedControl sender) {
-            CanvasBitmap bitmapSun = await CanvasBitmap.LoadAsync(sender, "images/sun.png");
-            sun = new AnimatedSprite(bitmapSun, new Vector2(1000, 0), 256, 256, 16, 200.0);
+            Weather.CanvasBitmapSun = await CanvasBitmap.LoadAsync(sender, "images/sun.png");
+            Weather.CanvasBitmapCloud = await CanvasBitmap.LoadAsync(sender, "images/cloud.png");
+            Weather.CanvasBitmapRain = await CanvasBitmap.LoadAsync(sender, "images/rain.png");
+            Weather.CanvasBitmapLightning = await CanvasBitmap.LoadAsync(sender, "images/lightning.png");
+            Weather.CanvasBitmapPartlyCloudy = await CanvasBitmap.LoadAsync(sender, "images/partly_cloudy.png");
+            Weather.CanvasBitmapSnow = await CanvasBitmap.LoadAsync(sender, "images/snow.png");
+
+            Random r = new Random(DateTime.Now.Millisecond);
+
+            AnimatedSprites.Add(new AnimatedSprite(Weather.CanvasBitmapSun, new Vector2(1000, 0), 256, 256, 16, 150 + r.Next(100)));
+            AnimatedSprites.Add(new AnimatedSprite(Weather.CanvasBitmapCloud, new Vector2(1000, 256), 256, 256, 16, 150 + r.Next(100)));
+            AnimatedSprites.Add(new AnimatedSprite(Weather.CanvasBitmapRain, new Vector2(1000, 512), 256, 256, 16, 150 + r.Next(100)));
+            AnimatedSprites.Add(new AnimatedSprite(Weather.CanvasBitmapLightning, new Vector2(1256, 256), 256, 256, 16, 150 + r.Next(100)));
+            AnimatedSprites.Add(new AnimatedSprite(Weather.CanvasBitmapPartlyCloudy, new Vector2(1256, 512), 256, 256, 16, 150 + r.Next(100)));
+            AnimatedSprites.Add(new AnimatedSprite(Weather.CanvasBitmapSnow, new Vector2(1512, 256), 256, 256, 16, 150 + r.Next(100)));
         }
 
         private void canvasMain_PointerMoved(object sender, PointerRoutedEventArgs e) {

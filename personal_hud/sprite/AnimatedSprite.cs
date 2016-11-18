@@ -20,8 +20,8 @@ namespace personal_hud {
 
             int frameCountX = (int)canvasBitmap.Bounds.Width / frameResolution;
             int frameCountY = (int)canvasBitmap.Bounds.Height / frameResolution;
-            for (int x = 0; x < frameCountX; x++) {
-                for (int y = 0; y < frameCountY; y++) {
+            for (int y = 0; y < frameCountY; y++) {
+                for (int x = 0; x < frameCountX; x++) {
                     Frames.Add(new Rect(x * frameResolution, y * frameResolution, frameResolution, frameResolution));
                 }
             }
