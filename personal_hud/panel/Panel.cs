@@ -23,7 +23,7 @@ namespace personal_hud {
         protected Color _backgroundColor;
         protected Rect _backgroundRect;
 
-        protected static float _PADDING = 5.0f;
+        public static float _PADDING = 5.0f;
 
         public Panel(CanvasDevice device, Vector2 position, double width, double height) {
             _width = width;
@@ -35,8 +35,19 @@ namespace personal_hud {
             _backgroundRect = new Rect(Position.X, Position.Y, _width, _height);
         }
 
-        public abstract void Draw(CanvasAnimatedDrawEventArgs args, bool bMouseOver);
+        public virtual void Draw(CanvasAnimatedDrawEventArgs args, bool bMouseOver) {
+            DrawBackground(args, bMouseOver);
+            DrawBorder(args);
+        }
         public abstract void Update(CanvasAnimatedUpdateEventArgs args);
+
+        protected void DrawBackground(CanvasAnimatedDrawEventArgs args, bool bMouseOver) {
+            args.DrawingSession.FillRectangle(_backgroundRect, bMouseOver ? Colors.Green : _backgroundColor);
+        }
+
+        protected void DrawBorder(CanvasAnimatedDrawEventArgs args) {
+            args.DrawingSession.DrawRoundedRectangle(new Rect(Position.X, Position.Y, _width, _height), 1, 1, Colors.White);
+        }
 
         public bool HitTest(int x, int y) {
             if (Position.X > x) { return false; }

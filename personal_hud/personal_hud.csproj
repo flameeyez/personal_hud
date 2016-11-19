@@ -92,11 +92,12 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="panel\PanelForecastDay.cs" />
     <Compile Include="sprite\AnimatedSprite.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="panel\PanelCurrentWeatherSnapshot.cs" />
+    <Compile Include="panel\PanelCurrentWeather.cs" />
     <Compile Include="sprite\Sprite.cs" />
     <Compile Include="weather\ForecastClasses.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -115,6 +116,12 @@
     <None Include="personal_hud_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="images\chancerain.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\chancesnow.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="images\cloud.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

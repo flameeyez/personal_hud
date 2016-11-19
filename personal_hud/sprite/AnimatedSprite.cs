@@ -15,7 +15,7 @@ namespace personal_hud {
         private int _currentFrame;
         public List<Rect> Frames = new List<Rect>();
 
-        public AnimatedSprite(CanvasBitmap canvasBitmap, Vector2 position, double width, double height, int frameResolution, double frameThreshold = 200.0) : base(canvasBitmap, position, width, height) {
+        public AnimatedSprite(CanvasBitmap canvasBitmap, Vector2 position, double width, double height, int frameResolution = 16, double frameThreshold = 200.0) : base(canvasBitmap, position, width, height) {
             _frameThreshold = frameThreshold;
 
             int frameCountX = (int)canvasBitmap.Bounds.Width / frameResolution;
