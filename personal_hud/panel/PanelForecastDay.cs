@@ -15,15 +15,12 @@ namespace personal_hud {
     class PanelForecastDay : Panel {
         private AnimatedSprite _sprite;
         private Rect _spriteRect;
+        private int _dayIndex;
 
-        private CanvasTextLayout _weekdayStringTextLayout;
-        private Vector2 _weekdayStringPosition;
-        private CanvasTextLayout _monthDayStringTextLayout;
-        private Vector2 _monthDayStringPosition;
-        private CanvasTextLayout _temperatureHighTextLayout;
-        private Vector2 _temperatureHighPosition;
-        private CanvasTextLayout _temperatureLowTextLayout;
-        private Vector2 _temperatureLowPosition;
+        private PanelString _weekday;
+        private PanelString _monthDay;
+        private PanelString _temperatureHigh;
+        private PanelString _temperatureLow;
 
         private Vector2 _barLeft;
         private Vector2 _barRight;
@@ -38,32 +35,39 @@ namespace personal_hud {
         private double _widthThird { get { return _width / 3; } }
         private double _heightThird { get { return _height / 3; } }
 
-        public PanelForecastDay(CanvasDevice device, Vector2 position, double width, double height, TxtForecastDay txtForecastDay, SimpleForecastDay simpleForecastDay) : base(device, position, width, height) {
+        public PanelForecastDay(CanvasDevice device, Vector2 position, double width, double height, WeatherData weatherData, int dayIndex) : base(device, position, width, height) {
             _backgroundColor = Color.FromArgb(255, 0, 0, 128);
+            _dayIndex = dayIndex;
+            RefreshWeatherDataObjects(weatherData);
+        }
 
-            _weekdayStringTextLayout = new CanvasTextLayout(device, simpleForecastDay.Date.Weekday, Fonts.PressStart2P14NoWrap, 0, 0);
-            _weekdayStringPosition = new Vector2(position.X + _PADDING, position.Y + _PADDING);
+        public override void RefreshWeatherDataObjects(WeatherData weatherData) {
+            SimpleForecastDay simpleForecastDay = weatherData.Forecast.Forecast.SimpleForecast.ForecastDay[_dayIndex];
+            TxtForecastDay txtForecastDay = weatherData.Forecast.Forecast.Txt_Forecast.ForecastDay[_dayIndex];
 
-            _monthDayStringTextLayout = new CanvasTextLayout(device, simpleForecastDay.Date.Month + "/" + simpleForecastDay.Date.Day, Fonts.PressStart2P14NoWrap, 0, 0);
-            float x = Position.X + (float)_width - _PADDING - (float)_monthDayStringTextLayout.LayoutBounds.Width;
-            _monthDayStringPosition = new Vector2(x, position.Y + _PADDING);
+            _weekday = new PanelString(_device, simpleForecastDay.Date.Weekday, Fonts.PressStart2P14NoWrap);
+            _weekday.Position = new Vector2(Position.X + _PADDING, Position.Y + _PADDING);
 
-            _barLeft = new Vector2(Position.X, _weekdayStringPosition.Y + (float)_weekdayStringTextLayout.LayoutBounds.Height + _PADDING);
-            _barRight = new Vector2(Position.X + (float)_width, _weekdayStringPosition.Y + (float)_weekdayStringTextLayout.LayoutBounds.Height + _PADDING);
+            _monthDay = new PanelString(_device, simpleForecastDay.Date.Month + "/" + simpleForecastDay.Date.Day, Fonts.PressStart2P14NoWrap);
+            float x = Position.X + (float)_width - _PADDING - (float)_monthDay.Width;
+            _monthDay.Position = new Vector2(x, Position.Y + _PADDING);
 
-            _temperatureHighTextLayout = new CanvasTextLayout(device, "H:" + simpleForecastDay.High.Fahrenheit + "°", Fonts.PressStart2P12NoWrap, 0, 0);
-            float y = position.Y + (float)height - _PADDING - (float)_temperatureHighTextLayout.LayoutBounds.Height;
-            _temperatureHighPosition = new Vector2(position.X + _PADDING, y);
+            _barLeft = new Vector2(Position.X, _weekday.Position.Y + (float)_weekday.Height + _PADDING);
+            _barRight = new Vector2(Position.X + (float)_width, _weekday.Position.Y + (float)_weekday.Height + _PADDING);
 
-            _temperatureLowTextLayout = new CanvasTextLayout(device, "L:" + simpleForecastDay.Low.Fahrenheit + "°", Fonts.PressStart2P12NoWrap, 0, 0);
-            x = Position.X + (float)_width - _PADDING - (float)_temperatureLowTextLayout.LayoutBounds.Width;
-            y = position.Y + (float)_height - _PADDING - (float)_temperatureLowTextLayout.LayoutBounds.Height;
-            _temperatureLowPosition = new Vector2(x, y);
+            _temperatureHigh = new PanelString(_device, "H:" + simpleForecastDay.High.Fahrenheit + "°", Fonts.PressStart2P12NoWrap);
+            float y = Position.Y + (float)_height - _PADDING - (float)_temperatureHigh.Height;
+            _temperatureHigh.Position = new Vector2(Position.X + _PADDING, y);
+
+            _temperatureLow = new PanelString(_device, "L:" + simpleForecastDay.Low.Fahrenheit + "°", Fonts.PressStart2P12NoWrap);
+            x = Position.X + (float)_width - _PADDING - (float)_temperatureLow.Width;
+            y = Position.Y + (float)_height - _PADDING - (float)_temperatureLow.Height;
+            _temperatureLow.Position = new Vector2(x, y);
 
             // set sprite
             _spriteRect = new Rect(X1, Y1, _widthThird, _heightThird);
             CanvasBitmap bitmap = null;
-            if (Weather.WeatherTypeToBitmap.TryGetValue(simpleForecastDay.Icon, out bitmap)) {
+            if (WeatherBitmaps.WeatherTypeToBitmap.TryGetValue(simpleForecastDay.Icon, out bitmap)) {
                 // consider caching and cloning
                 _sprite = new AnimatedSprite(bitmap, new Vector2(X1, Y1), _widthThird, _heightThird);
             }
@@ -83,10 +87,10 @@ namespace personal_hud {
         }
 
         private void DrawTextLayouts(CanvasAnimatedDrawEventArgs args) {
-            if (_weekdayStringTextLayout != null) { args.DrawingSession.DrawTextLayout(_weekdayStringTextLayout, _weekdayStringPosition, Colors.White); }
-            if (_monthDayStringTextLayout != null) { args.DrawingSession.DrawTextLayout(_monthDayStringTextLayout, _monthDayStringPosition, Colors.White); }
-            if (_temperatureHighTextLayout != null) { args.DrawingSession.DrawTextLayout(_temperatureHighTextLayout, _temperatureHighPosition, Colors.White); }
-            if (_temperatureLowTextLayout != null) { args.DrawingSession.DrawTextLayout(_temperatureLowTextLayout, _temperatureLowPosition, Colors.White); }
+            _weekday.Draw(args);
+            _monthDay.Draw(args);
+            _temperatureHigh.Draw(args);
+            _temperatureLow.Draw(args);
         }
 
         private void DrawBitmap(CanvasAnimatedDrawEventArgs args) {

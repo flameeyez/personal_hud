@@ -92,6 +92,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="panel\PanelString.cs" />
     <Compile Include="panel\PanelForecastDay.cs" />
     <Compile Include="sprite\AnimatedSprite.cs" />
     <Compile Include="App.xaml.cs">
@@ -107,7 +108,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="fonts\Fonts.cs" />
     <Compile Include="weather\CurrentWeatherClasses.cs" />
-    <Compile Include="weather\Weather.cs" />
+    <Compile Include="weather\WeatherBitmaps.cs" />
+    <Compile Include="weather\WeatherData.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

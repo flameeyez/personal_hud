@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -114,13 +115,20 @@ namespace personal_hud.current_weather {
         public Response Response { get; set; }
         public CurrentObservation Current_Observation { get; set; }
 
-        private static string strTempResponse = "{\"response\":{\"version\":\"0.1\",\"termsofService\":\"http://www.wunderground.com/weather/api/d/terms.html\",\"features\":{\"conditions\":1}},\"current_observation\":{\"image\":{\"url\":\"http://icons.wxug.com/graphics/wu2/logo_130x80.png\",\"title\":\"WeatherUnderground\",\"link\":\"http://www.wunderground.com\"},\"display_location\":{\"full\":\"Redmond,WA\",\"city\":\"Redmond\",\"state\":\"WA\",\"state_name\":\"Washington\",\"country\":\"US\",\"country_iso3166\":\"US\",\"zip\":\"98052\",\"magic\":\"1\",\"wmo\":\"99999\",\"latitude\":\"47.68000031\",\"longitude\":\"-122.12000275\",\"elevation\":\"33.2\"},\"observation_location\":{\"full\":\"EducationHill,Redmond,Washington\",\"city\":\"EducationHill,Redmond\",\"state\":\"Washington\",\"country\":\"US\",\"country_iso3166\":\"US\",\"latitude\":\"47.686687\",\"longitude\":\"-122.105721\",\"elevation\":\"416ft\"},\"estimated\":{},\"station_id\":\"KWAREDMO124\",\"observation_time\":\"LastUpdatedonOctober31,3:05PMPDT\",\"observation_time_rfc822\":\"Mon,31Oct201615:05:14-0700\",\"observation_epoch\":\"1477951514\",\"local_time_rfc822\":\"Mon,31Oct201615:49:03-0700\",\"local_epoch\":\"1477954143\",\"local_tz_short\":\"PDT\",\"local_tz_long\":\"America/Los_Angeles\",\"local_tz_offset\":\"-0700\",\"weather\":\"Overcast\",\"temperature_string\":\"52.3F(11.3C)\",\"temp_f\":52.3,\"temp_c\":11.3,\"relative_humidity\":\"97%\",\"wind_string\":\"FromtheNNWat1.9MPHGustingto6.2MPH\",\"wind_dir\":\"NNW\",\"wind_degrees\":345,\"wind_mph\":1.9,\"wind_gust_mph\":\"6.2\",\"wind_kph\":3.1,\"wind_gust_kph\":\"10.0\",\"pressure_mb\":\"1010\",\"pressure_in\":\"29.82\",\"pressure_trend\":\"+\",\"dewpoint_string\":\"52F(11C)\",\"dewpoint_f\":52,\"dewpoint_c\":11,\"heat_index_string\":\"NA\",\"heat_index_f\":\"NA\",\"heat_index_c\":\"NA\",\"windchill_string\":\"NA\",\"windchill_f\":\"NA\",\"windchill_c\":\"NA\",\"feelslike_string\":\"52.3F(11.3C)\",\"feelslike_f\":\"52.3\",\"feelslike_c\":\"11.3\",\"visibility_mi\":\"10.0\",\"visibility_km\":\"16.1\",\"solarradiation\":\"--\",\"UV\":\"1\",\"precip_1hr_string\":\"-999.00in(0mm)\",\"precip_1hr_in\":\"-999.00\",\"precip_1hr_metric\":\"0\",\"precip_today_string\":\"0.57in(14mm)\",\"precip_today_in\":\"0.57\",\"precip_today_metric\":\"14\",\"icon\":\"cloudy\",\"icon_url\":\"http://icons.wxug.com/i/c/k/cloudy.gif\",\"forecast_url\":\"http://www.wunderground.com/US/WA/Redmond.html\",\"history_url\":\"http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=KWAREDMO124\",\"ob_url\":\"http://www.wunderground.com/cgi-bin/findweather/getForecast?query=47.686687,-122.105721\",\"nowcast\":\"\"}}";
-        public static CurrentWeather Refresh() {
-            return JsonConvert.DeserializeObject<CurrentWeather>(strTempResponse);
-        }
-
-        public override string ToString() {
-            return Current_Observation.Observation_Location.City;
+        public static async Task<CurrentWeather> Refresh() {
+            try {
+                HttpClient client = new HttpClient();
+                HttpResponseMessage response = await client.GetAsync("http://api.wunderground.com/api/023422a3f5a8324b/conditions/q/WA/Redmond.json");
+                if (response.IsSuccessStatusCode) {
+                    return JsonConvert.DeserializeObject<CurrentWeather>(response.Content.ReadAsStringAsync().Result);
+                }
+                else {
+                    return null;
+                }
+            }
+            catch {
+                return null;
+            }
         }
     }
 }
