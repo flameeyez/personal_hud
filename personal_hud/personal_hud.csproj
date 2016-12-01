@@ -108,6 +108,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="fonts\Fonts.cs" />
     <Compile Include="weather\CurrentWeatherClasses.cs" />
+    <Compile Include="weather\Moon.cs" />
+    <Compile Include="weather\MoonBitmaps.cs" />
     <Compile Include="weather\WeatherBitmaps.cs" />
     <Compile Include="weather\WeatherData.cs" />
   </ItemGroup>
@@ -128,6 +130,30 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="images\lightning.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\moon_first_quarter.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\moon_full.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\moon_last_quarter.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\moon_new.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\moon_waning_crescent.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\moon_waning_gibbous.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\moon_waxing_crescent.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="images\moon_waxing_gibbous.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="images\partly_cloudy.png">

@@ -36,7 +36,7 @@ namespace personal_hud {
     /// </summary>
     public sealed partial class MainPage : Page {
         List<Panel> Panels = new List<Panel>();
-        List<AnimatedSprite> AnimatedSprites = new List<AnimatedSprite>();
+        // List<AnimatedSprite> AnimatedSprites = new List<AnimatedSprite>();
         WeatherData weatherData;
         private double _weatherDataLastUpdatedMilliseconds;
         private static readonly double _weatherDataUpdateThreshold = 360000;
@@ -61,6 +61,15 @@ namespace personal_hud {
 
             args.DrawingSession.DrawText(((int)_weatherDataLastUpdatedMilliseconds).ToString(), new Vector2(1500, 10), Colors.White);
             args.DrawingSession.DrawText(_weatherDataUpdateThreshold.ToString(), new Vector2(1500, 30), Colors.White);
+
+            args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapNew, new Rect(100, 100, 64, 64));
+            args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapWaxingCrescent, new Rect(164, 100, 64, 64));
+            args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapQuarter, new Rect(228, 100, 64, 64));
+            args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapWaxingGibbous, new Rect(296, 100, 64, 64));
+            args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapFull, new Rect(100, 164, 64, 64));
+            args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapWaningGibbous, new Rect(164, 164, 64, 64));
+            args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapLastQuarter, new Rect(228, 164, 64, 64));
+            args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapWaningCrescent, new Rect(296, 164, 64, 64));
 
             //foreach (AnimatedSprite animatedSprite in AnimatedSprites) {
             //    animatedSprite.Draw(args);
@@ -93,61 +102,48 @@ namespace personal_hud {
         }
 
         private async Task CreateResourcesAsync(CanvasAnimatedControl sender) {
-            WeatherBitmaps.CanvasBitmapSun = await CanvasBitmap.LoadAsync(sender, "images/sun.png");
-            WeatherBitmaps.CanvasBitmapCloud = await CanvasBitmap.LoadAsync(sender, "images/cloud.png");
-            WeatherBitmaps.CanvasBitmapRain = await CanvasBitmap.LoadAsync(sender, "images/rain.png");
-            WeatherBitmaps.CanvasBitmapChanceRain = await CanvasBitmap.LoadAsync(sender, "images/chancerain.png");
-            WeatherBitmaps.CanvasBitmapLightning = await CanvasBitmap.LoadAsync(sender, "images/lightning.png");
-            WeatherBitmaps.CanvasBitmapPartlyCloudy = await CanvasBitmap.LoadAsync(sender, "images/partly_cloudy.png");
-            WeatherBitmaps.CanvasBitmapSnow = await CanvasBitmap.LoadAsync(sender, "images/snow.png");
-            WeatherBitmaps.CanvasBitmapChanceSnow = await CanvasBitmap.LoadAsync(sender, "images/chancesnow.png");
-
-            WeatherBitmaps.WeatherTypeToBitmap.Add("chancerain", WeatherBitmaps.CanvasBitmapChanceRain);
-            WeatherBitmaps.WeatherTypeToBitmap.Add("partlycloudy", WeatherBitmaps.CanvasBitmapPartlyCloudy);
-            WeatherBitmaps.WeatherTypeToBitmap.Add("cloudy", WeatherBitmaps.CanvasBitmapCloud);
-            WeatherBitmaps.WeatherTypeToBitmap.Add("mostlycloudy", WeatherBitmaps.CanvasBitmapCloud);
-            WeatherBitmaps.WeatherTypeToBitmap.Add("rain", WeatherBitmaps.CanvasBitmapRain);
-            WeatherBitmaps.WeatherTypeToBitmap.Add("tstorms", WeatherBitmaps.CanvasBitmapLightning);
-            WeatherBitmaps.WeatherTypeToBitmap.Add("clear", WeatherBitmaps.CanvasBitmapSun);
-            WeatherBitmaps.WeatherTypeToBitmap.Add("snow", WeatherBitmaps.CanvasBitmapSnow);
-            WeatherBitmaps.WeatherTypeToBitmap.Add("chancesnow", WeatherBitmaps.CanvasBitmapChanceSnow);
+            await MoonBitmaps.Initialize(sender);
+            await WeatherBitmaps.Initialize(sender);
 
             Random r = new Random(DateTime.Now.Millisecond);
 
-            AnimatedSprites.Add(new AnimatedSprite(WeatherBitmaps.CanvasBitmapSun, new Vector2(1000, 0), 64, 64, 16, 150 + r.Next(100)));
-            AnimatedSprites.Add(new AnimatedSprite(WeatherBitmaps.CanvasBitmapCloud, new Vector2(1000, 64), 64, 64, 16, 150 + r.Next(100)));
-            AnimatedSprites.Add(new AnimatedSprite(WeatherBitmaps.CanvasBitmapRain, new Vector2(1000, 128), 64, 64, 16, 150 + r.Next(100)));
-            AnimatedSprites.Add(new AnimatedSprite(WeatherBitmaps.CanvasBitmapChanceRain, new Vector2(1000, 192), 64, 64, 16, 150 + r.Next(100)));
-            AnimatedSprites.Add(new AnimatedSprite(WeatherBitmaps.CanvasBitmapLightning, new Vector2(1256, 256), 64, 64, 16, 150 + r.Next(100)));
-            AnimatedSprites.Add(new AnimatedSprite(WeatherBitmaps.CanvasBitmapPartlyCloudy, new Vector2(1256, 320), 64, 64, 16, 150 + r.Next(100)));
-            AnimatedSprites.Add(new AnimatedSprite(WeatherBitmaps.CanvasBitmapSnow, new Vector2(1512, 384), 64, 64, 16, 150 + r.Next(100)));
+            //AnimatedSprites.Add(new AnimatedSprite(WeatherBitmaps.CanvasBitmapSun, new Vector2(1000, 0), 64, 64, 16, 150 + r.Next(100)));
+            //AnimatedSprites.Add(new AnimatedSprite(WeatherBitmaps.CanvasBitmapCloud, new Vector2(1000, 64), 64, 64, 16, 150 + r.Next(100)));
+            //AnimatedSprites.Add(new AnimatedSprite(WeatherBitmaps.CanvasBitmapRain, new Vector2(1000, 128), 64, 64, 16, 150 + r.Next(100)));
+            //AnimatedSprites.Add(new AnimatedSprite(WeatherBitmaps.CanvasBitmapChanceRain, new Vector2(1000, 192), 64, 64, 16, 150 + r.Next(100)));
+            //AnimatedSprites.Add(new AnimatedSprite(WeatherBitmaps.CanvasBitmapLightning, new Vector2(1256, 256), 64, 64, 16, 150 + r.Next(100)));
+            //AnimatedSprites.Add(new AnimatedSprite(WeatherBitmaps.CanvasBitmapPartlyCloudy, new Vector2(1256, 320), 64, 64, 16, 150 + r.Next(100)));
+            //AnimatedSprites.Add(new AnimatedSprite(WeatherBitmaps.CanvasBitmapSnow, new Vector2(1512, 384), 64, 64, 16, 150 + r.Next(100)));
 
             // calculate panel dimensions based on client bounds
             int clientWidth = 1920 - (int)Panel._PADDING * 2;
-            int clientHeight = 1080;
+            int clientHeight = 1080 - (int)Panel._PADDING * 2;
             int nNumPanels = 7;
 
-            int panelWidth = clientWidth / nNumPanels;
-            int padding = (clientWidth - panelWidth * nNumPanels) / (nNumPanels - 1);
+            int rightPanelWidth = 300;
+
+            int dayPanelWidth = (clientWidth - rightPanelWidth) / nNumPanels;
+            int padding = (clientWidth - rightPanelWidth - dayPanelWidth * nNumPanels) / (nNumPanels - 1);
             while (padding < 5) {
-                panelWidth -= 1;
-                padding = (clientWidth - panelWidth * nNumPanels) / (nNumPanels - 1);
+                dayPanelWidth -= 1;
+                padding = (clientWidth - rightPanelWidth - dayPanelWidth * nNumPanels) / (nNumPanels - 1);
             }
 
-            clientWidth = panelWidth * nNumPanels + padding * (nNumPanels - 1);
-            int panelHeight = panelWidth;
+            int fullLeftWidth = dayPanelWidth * nNumPanels + padding * (nNumPanels - 1);
+            int dayPanelHeight = dayPanelWidth;
 
-            float y = clientHeight - panelWidth - Panel._PADDING;
+            float y = clientHeight - dayPanelWidth - Panel._PADDING;
 
             weatherData = await WeatherData.Create();
+            MOON_PHASE phase = Moon.GetCurrentPhase();
 
             for (int i = 0; i < nNumPanels; i++) {
-                Vector2 position = new Vector2(Panel._PADDING + (panelWidth + padding) * i, y);
-                Panels.Add(new PanelForecastDay(sender.Device, position, panelWidth, panelHeight, weatherData, i));
+                Vector2 position = new Vector2(Panel._PADDING + (dayPanelWidth + padding) * i, y);
+                Panels.Add(new PanelForecastDay(sender.Device, position, dayPanelWidth, dayPanelHeight, weatherData, i));
             }
 
             // create current snapshot panel
-            pcw = new PanelCurrentWeather(sender.Device, new Vector2(Panel._PADDING, Panel._PADDING), clientWidth, clientHeight - Panel._PADDING * 3 - panelHeight, weatherData);
+            pcw = new PanelCurrentWeather(sender.Device, new Vector2(Panel._PADDING, Panel._PADDING), fullLeftWidth, clientHeight - Panel._PADDING * 3 - dayPanelHeight, weatherData);
             Panels.Add(pcw);
         }
 
