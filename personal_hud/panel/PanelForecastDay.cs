@@ -38,10 +38,10 @@ namespace personal_hud {
         public PanelForecastDay(CanvasDevice device, Vector2 position, double width, double height, WeatherData weatherData, int dayIndex) : base(device, position, width, height) {
             _backgroundColor = Color.FromArgb(255, 0, 0, 128);
             _dayIndex = dayIndex;
-            RefreshWeatherDataObjects(weatherData);
+            RefreshWeatherData(weatherData);
         }
 
-        public override void RefreshWeatherDataObjects(WeatherData weatherData) {
+        public override void RefreshWeatherData(WeatherData weatherData) {
             SimpleForecastDay simpleForecastDay = weatherData.Forecast.Forecast.SimpleForecast.ForecastDay[_dayIndex];
             TxtForecastDay txtForecastDay = weatherData.Forecast.Forecast.Txt_Forecast.ForecastDay[_dayIndex];
 

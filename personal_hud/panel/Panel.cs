@@ -49,7 +49,7 @@ namespace personal_hud {
             DrawBorder(args);
         }
         public abstract void Update(CanvasAnimatedUpdateEventArgs args);
-        public abstract void RefreshWeatherDataObjects(WeatherData weatherData);
+        public abstract void RefreshWeatherData(WeatherData weatherData);
 
         protected void DrawBackground(CanvasAnimatedDrawEventArgs args, bool bMouseOver) {
             args.DrawingSession.FillRectangle(_backgroundRect, bMouseOver ? Colors.Green : _backgroundColor);

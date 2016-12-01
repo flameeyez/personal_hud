@@ -36,7 +36,7 @@ namespace personal_hud {
     /// </summary>
     public sealed partial class MainPage : Page {
         List<Panel> Panels = new List<Panel>();
-        // List<AnimatedSprite> AnimatedSprites = new List<AnimatedSprite>();
+        List<AnimatedSprite> AnimatedSprites = new List<AnimatedSprite>();
         WeatherData weatherData;
         private double _weatherDataLastUpdatedMilliseconds;
         private static readonly double _weatherDataUpdateThreshold = 360000;
@@ -62,21 +62,25 @@ namespace personal_hud {
             args.DrawingSession.DrawText(((int)_weatherDataLastUpdatedMilliseconds).ToString(), new Vector2(1500, 10), Colors.White);
             args.DrawingSession.DrawText(_weatherDataUpdateThreshold.ToString(), new Vector2(1500, 30), Colors.White);
 
-            args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapNew, new Rect(100, 100, 64, 64));
-            args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapWaxingCrescent, new Rect(164, 100, 64, 64));
-            args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapQuarter, new Rect(228, 100, 64, 64));
-            args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapWaxingGibbous, new Rect(296, 100, 64, 64));
-            args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapFull, new Rect(100, 164, 64, 64));
-            args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapWaningGibbous, new Rect(164, 164, 64, 64));
-            args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapLastQuarter, new Rect(228, 164, 64, 64));
-            args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapWaningCrescent, new Rect(296, 164, 64, 64));
+            //args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapNew, new Rect(100, 100, 64, 64));
+            //args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapWaxingCrescent, new Rect(164, 100, 64, 64));
+            //args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapQuarter, new Rect(228, 100, 64, 64));
+            //args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapWaxingGibbous, new Rect(296, 100, 64, 64));
+            //args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapFull, new Rect(100, 164, 64, 64));
+            //args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapWaningGibbous, new Rect(164, 164, 64, 64));
+            //args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapLastQuarter, new Rect(228, 164, 64, 64));
+            //args.DrawingSession.DrawImage(MoonBitmaps.MoonBitmapWaningCrescent, new Rect(296, 164, 64, 64));
 
-            //foreach (AnimatedSprite animatedSprite in AnimatedSprites) {
-            //    animatedSprite.Draw(args);
-            //}
+            foreach (AnimatedSprite animatedSprite in AnimatedSprites) {
+                animatedSprite.Draw(args);
+            }
         }
 
         private async void canvasMain_Update(ICanvasAnimatedControl sender, CanvasAnimatedUpdateEventArgs args) {
+            foreach (AnimatedSprite animatedSprite in AnimatedSprites) {
+                animatedSprite.Update(args);
+            }
+
             foreach (Panel panel in Panels) {
                 panel.Update(args);
             }
@@ -92,7 +96,7 @@ namespace personal_hud {
                 }
 
                 foreach (Panel panel in Panels) {
-                    panel.RefreshWeatherDataObjects(weatherData);
+                    panel.RefreshWeatherData(weatherData);
                 }
             }
         }
@@ -106,6 +110,8 @@ namespace personal_hud {
             await WeatherBitmaps.Initialize(sender);
 
             Random r = new Random(DateTime.Now.Millisecond);
+
+            AnimatedSprites.Add(new AnimatedSprite(MoonBitmaps.MoonBitmapFull, new Vector2(200, 200), 64, 64, 32));
 
             //AnimatedSprites.Add(new AnimatedSprite(WeatherBitmaps.CanvasBitmapSun, new Vector2(1000, 0), 64, 64, 16, 150 + r.Next(100)));
             //AnimatedSprites.Add(new AnimatedSprite(WeatherBitmaps.CanvasBitmapCloud, new Vector2(1000, 64), 64, 64, 16, 150 + r.Next(100)));
@@ -129,8 +135,9 @@ namespace personal_hud {
                 padding = (clientWidth - rightPanelWidth - dayPanelWidth * nNumPanels) / (nNumPanels - 1);
             }
 
-            int fullLeftWidth = dayPanelWidth * nNumPanels + padding * (nNumPanels - 1);
             int dayPanelHeight = dayPanelWidth;
+            int fullLeftWidth = dayPanelWidth * nNumPanels + padding * (nNumPanels - 1);
+            rightPanelWidth = clientWidth - fullLeftWidth - (int)Panel._PADDING;
 
             float y = clientHeight - dayPanelWidth - Panel._PADDING;
 
@@ -142,9 +149,12 @@ namespace personal_hud {
                 Panels.Add(new PanelForecastDay(sender.Device, position, dayPanelWidth, dayPanelHeight, weatherData, i));
             }
 
-            // create current snapshot panel
+            // current weather snapshot
             pcw = new PanelCurrentWeather(sender.Device, new Vector2(Panel._PADDING, Panel._PADDING), fullLeftWidth, clientHeight - Panel._PADDING * 3 - dayPanelHeight, weatherData);
             Panels.Add(pcw);
+
+            // views panel
+            Panels.Add(new PanelViews(sender.Device, new Vector2(fullLeftWidth + Panel._PADDING * 2, Panel._PADDING), rightPanelWidth, clientHeight - Panel._PADDING * 2));
         }
 
         private void canvasMain_PointerMoved(object sender, PointerRoutedEventArgs e) {

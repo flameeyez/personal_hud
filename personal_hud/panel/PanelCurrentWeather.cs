@@ -31,10 +31,10 @@ namespace personal_hud {
         public PanelCurrentWeather(CanvasDevice device, Vector2 position, double width, double height, WeatherData weatherData)
             : base(device, position, width, height) {
             _backgroundColor = Color.FromArgb(255, 0, 0, 128);
-            RefreshWeatherDataObjects(weatherData);
+            RefreshWeatherData(weatherData);
         }
 
-        public override void RefreshWeatherDataObjects(WeatherData weatherData) {
+        public override void RefreshWeatherData(WeatherData weatherData) {
             _currentWeatherData = weatherData.Current;
             _title = new PanelString(_device, _currentWeatherData.Current_Observation.Display_Location.Full, Fonts.PressStart2P14NoWrap);
             _lastUpdated = new PanelString(_device, _currentWeatherData.Current_Observation.Observation_Time, Fonts.PressStart2P12NoWrap);

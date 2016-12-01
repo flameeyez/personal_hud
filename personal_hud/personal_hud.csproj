@@ -94,6 +94,7 @@
   <ItemGroup>
     <Compile Include="panel\PanelString.cs" />
     <Compile Include="panel\PanelForecastDay.cs" />
+    <Compile Include="panel\PanelViews.cs" />
     <Compile Include="sprite\AnimatedSprite.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
