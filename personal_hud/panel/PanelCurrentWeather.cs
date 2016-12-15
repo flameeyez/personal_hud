@@ -13,7 +13,6 @@ using Windows.UI;
 
 namespace personal_hud {
     class PanelCurrentWeather : Panel {
-        private CurrentWeather _currentWeatherData;
         private PanelString _title;
         private PanelString _lastUpdated;
 
@@ -28,17 +27,25 @@ namespace personal_hud {
 
         public List<string> DebugStrings = new List<string>();
 
-        public PanelCurrentWeather(CanvasDevice device, Vector2 position, double width, double height, WeatherData weatherData)
+        public PanelCurrentWeather(CanvasDevice device, Vector2 position, double width, double height)
             : base(device, position, width, height) {
             _backgroundColor = Color.FromArgb(255, 0, 0, 128);
-            RefreshWeatherData(weatherData);
+            RefreshData();
         }
 
-        public override void RefreshWeatherData(WeatherData weatherData) {
-            _currentWeatherData = weatherData.Current;
-            _title = new PanelString(_device, _currentWeatherData.Current_Observation.Display_Location.Full, Fonts.PressStart2P14NoWrap);
-            _lastUpdated = new PanelString(_device, _currentWeatherData.Current_Observation.Observation_Time, Fonts.PressStart2P12NoWrap);
-            RecalculateLayout();
+        public override void RefreshData() {
+            if(WeatherData.LastUpdate > DataSourceLastUpdated) {
+                DataSourceLastUpdated = WeatherData.LastUpdate;
+
+                byte red = (byte)Statics.r.Next(200);
+                byte green = (byte)Statics.r.Next(200);
+                byte blue = (byte)Statics.r.Next(200);
+                _backgroundColor = Color.FromArgb(255, red, green, blue);
+
+                _title = new PanelString(_device, WeatherData.Current.Current_Observation.Display_Location.Full, Fonts.PressStart2P14NoWrap);
+                _lastUpdated = new PanelString(_device, WeatherData.Current.Current_Observation.Observation_Time, Fonts.PressStart2P12NoWrap);
+                RecalculateLayout();
+            }
         }
 
         protected override void RecalculateLayout() {
@@ -60,8 +67,8 @@ namespace personal_hud {
             _bottomBarRight = new Vector2(PanelBoundaryRight, timeStringPosition.Y - _PADDING);
         }
 
-        public override void Draw(CanvasAnimatedDrawEventArgs args, bool bMouseOver) {
-            DrawBackground(args, bMouseOver);
+        public override void Draw(CanvasAnimatedDrawEventArgs args, Point mouseCoordinates) {
+            DrawBackground(args, mouseCoordinates);
             DrawBorder(args);
             DrawTitle(args);
             DrawBars(args);
@@ -82,7 +89,7 @@ namespace personal_hud {
         }
 
         public override void Update(CanvasAnimatedUpdateEventArgs args) {
-
+            base.Update(args);
         }
 
         private void DrawStrings(CanvasAnimatedDrawEventArgs args) {

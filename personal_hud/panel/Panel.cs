@@ -31,6 +31,9 @@ namespace personal_hud {
         protected Color _backgroundColor;
         protected Rect _backgroundRect;
 
+        private double _lastRefreshMilliseconds;
+        protected DateTime DataSourceLastUpdated = DateTime.MinValue;
+
         public static float _PADDING = 5.0f;
 
         public Panel(CanvasDevice device, Vector2 position, double width, double height) {
@@ -38,32 +41,40 @@ namespace personal_hud {
             _width = width;
             _height = height;
             Position = position;
+            _lastRefreshMilliseconds = 0.0;
         }
 
         protected virtual void RecalculateLayout() {
             _backgroundRect = new Rect(Position.X, Position.Y, _width, _height);
         }
 
-        public virtual void Draw(CanvasAnimatedDrawEventArgs args, bool bMouseOver) {
-            DrawBackground(args, bMouseOver);
+        public virtual void Draw(CanvasAnimatedDrawEventArgs args, Point mouseCoordinates) {
+            DrawBackground(args, mouseCoordinates);
             DrawBorder(args);
         }
-        public abstract void Update(CanvasAnimatedUpdateEventArgs args);
-        public abstract void RefreshWeatherData(WeatherData weatherData);
+        public virtual void Update(CanvasAnimatedUpdateEventArgs args) {
+            _lastRefreshMilliseconds += args.Timing.ElapsedTime.TotalMilliseconds;
+            if(_lastRefreshMilliseconds >= Statics._panelRefreshThresholdMilliseconds) {
+                _lastRefreshMilliseconds = 0.0;
+                RefreshData();
+            }
+        }
 
-        protected void DrawBackground(CanvasAnimatedDrawEventArgs args, bool bMouseOver) {
-            args.DrawingSession.FillRectangle(_backgroundRect, bMouseOver ? Colors.Green : _backgroundColor);
+        public abstract void RefreshData();
+
+        protected void DrawBackground(CanvasAnimatedDrawEventArgs args, Point mouseCoordinates) {
+            args.DrawingSession.FillRectangle(_backgroundRect, HitTest(mouseCoordinates) ? Colors.Green : _backgroundColor);
         }
 
         protected void DrawBorder(CanvasAnimatedDrawEventArgs args) {
             args.DrawingSession.DrawRoundedRectangle(new Rect(Position.X, Position.Y, _width, _height), 1, 1, Colors.White);
         }
 
-        public bool HitTest(int x, int y) {
-            if (PanelBoundaryLeft > x) { return false; }
-            if (PanelBoundaryRight < x) { return false; }
-            if (PanelBoundaryTop > y) { return false; }
-            if (PanelBoundaryBottom < y) { return false; }
+        public bool HitTest(Point p) {
+            if (PanelBoundaryLeft > p.X) { return false; }
+            if (PanelBoundaryRight < p.X) { return false; }
+            if (PanelBoundaryTop > p.Y) { return false; }
+            if (PanelBoundaryBottom < p.Y) { return false; }
             return true;
         }
     }

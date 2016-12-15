@@ -109,6 +109,8 @@ namespace personal_hud.current_weather {
         public string History_URL { get; set; }
         public string Ob_URL { get; set; }
         public string Nowcast { get; set; }
+
+        public bool IsValid { get { return Image != null && Display_Location != null && Observation_Location != null; } }
     }
 
     public class CurrentWeather {
@@ -120,7 +122,9 @@ namespace personal_hud.current_weather {
                 HttpClient client = new HttpClient();
                 HttpResponseMessage response = await client.GetAsync("http://api.wunderground.com/api/023422a3f5a8324b/conditions/q/WA/Redmond.json");
                 if (response.IsSuccessStatusCode) {
-                    return JsonConvert.DeserializeObject<CurrentWeather>(response.Content.ReadAsStringAsync().Result);
+                    CurrentWeather c = JsonConvert.DeserializeObject<CurrentWeather>(response.Content.ReadAsStringAsync().Result);
+                    c.Current_Observation.Observation_Time = c.Current_Observation.Observation_Time.Replace("LANG.kLang.DateTime.", string.Empty);
+                    return c;
                 }
                 else {
                     return null;
@@ -130,5 +134,7 @@ namespace personal_hud.current_weather {
                 return null;
             }
         }
+
+        public bool IsValid { get { return Current_Observation != null && Current_Observation.IsValid; } }
     }
 }

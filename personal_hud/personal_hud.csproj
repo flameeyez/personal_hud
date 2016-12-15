@@ -95,12 +95,15 @@
     <Compile Include="panel\PanelString.cs" />
     <Compile Include="panel\PanelForecastDay.cs" />
     <Compile Include="panel\PanelViews.cs" />
+    <Compile Include="panel\View.cs" />
+    <Compile Include="panel\ViewWeatherCurrentAndForecast.cs" />
     <Compile Include="sprite\AnimatedSprite.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="panel\PanelCurrentWeather.cs" />
     <Compile Include="sprite\Sprite.cs" />
+    <Compile Include="Statics.cs" />
     <Compile Include="weather\ForecastClasses.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

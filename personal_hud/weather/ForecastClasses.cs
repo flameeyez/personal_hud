@@ -30,6 +30,8 @@ namespace personal_hud.forecast {
     public class TxtForecast {
         public string Date { get; set; }
         public List<TxtForecastDay> ForecastDay { get; set; }
+
+        public bool IsValid { get { return ForecastDay != null && ForecastDay.Count > 0; } }
     }
 
     public class Date {
@@ -140,11 +142,15 @@ namespace personal_hud.forecast {
 
     public class SimpleForecast {
         public List<SimpleForecastDay> ForecastDay { get; set; }
+
+        public bool IsValid { get { return ForecastDay != null && ForecastDay.Count > 0; } }
     }
 
     public class Forecast {
         public TxtForecast Txt_Forecast { get; set; }
         public SimpleForecast SimpleForecast { get; set; }
+
+        public bool IsValid { get { return Txt_Forecast != null && SimpleForecast != null && Txt_Forecast.IsValid && SimpleForecast.IsValid; } }
     }
 
     public class Forecast10Day {
@@ -166,5 +172,7 @@ namespace personal_hud.forecast {
                 return null;
             }
         }
+
+        public bool IsValid { get { return Forecast != null && Forecast.IsValid; } }
     }
 }
