@@ -8,6 +8,8 @@ using Windows.Foundation;
 
 namespace personal_hud {
     class View {
+        public double Width { get; set; }
+        public double Height { get; set; }
         public List<Panel> Panels = new List<Panel>();
 
         public void Draw(CanvasAnimatedDrawEventArgs args, Point mouseCoordinates) {

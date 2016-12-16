@@ -25,8 +25,6 @@ namespace personal_hud {
 
         private Vector2 timeStringPosition;
 
-        public List<string> DebugStrings = new List<string>();
-
         public PanelCurrentWeather(CanvasDevice device, Vector2 position, double width, double height)
             : base(device, position, width, height) {
             _backgroundColor = Color.FromArgb(255, 0, 0, 128);
@@ -75,17 +73,24 @@ namespace personal_hud {
             DrawCurrentTime(args);
             DrawStrings(args);
 
-            lock(Debug.Lock) {
-                DrawDebugStrings(args);
-            }            
-        }
-
-        private void DrawDebugStrings(CanvasAnimatedDrawEventArgs args) {
-            float y = _barLeft.Y + _PADDING;
-            foreach (string str in DebugStrings) {
-                args.DrawingSession.DrawText(str, new Vector2(PanelBoundaryLeft + _PADDING, y), Colors.White, Fonts.PressStart2P12NoWrap);
-                y += 14.0f;
-            }
+            float y = _barRight.Y + _PADDING;
+            args.DrawingSession.DrawText("Current temperature: " + WeatherData.Current.Current_Observation.Temperature_String, new Vector2(PanelBoundaryLeft + _PADDING, y), Colors.White, Fonts.PressStart2P12NoWrap);
+            y += 20;
+            args.DrawingSession.DrawText("Feels like: " + WeatherData.Current.Current_Observation.FeelsLike_String, new Vector2(PanelBoundaryLeft + _PADDING, y), Colors.White, Fonts.PressStart2P12NoWrap);
+            y += 20;
+            args.DrawingSession.DrawText("Relative humidity: " + WeatherData.Current.Current_Observation.Relative_Humidity, new Vector2(PanelBoundaryLeft + _PADDING, y), Colors.White, Fonts.PressStart2P12NoWrap);
+            y += 20;
+            args.DrawingSession.DrawText("Conditions: " + WeatherData.Current.Current_Observation.Icon, new Vector2(PanelBoundaryLeft + _PADDING, y), Colors.White, Fonts.PressStart2P12NoWrap);
+            y += 20;
+            args.DrawingSession.DrawText("Wind: " + WeatherData.Current.Current_Observation.Wind_String, new Vector2(PanelBoundaryLeft + _PADDING, y), Colors.White, Fonts.PressStart2P12NoWrap);
+            y += 20;
+            args.DrawingSession.DrawText("Precipitation (last hour): " + WeatherData.Current.Current_Observation.Precip_1hr_In + " in", new Vector2(PanelBoundaryLeft + _PADDING, y), Colors.White, Fonts.PressStart2P12NoWrap);
+            y += 20;
+            args.DrawingSession.DrawText("Precipitation (day): " + WeatherData.Current.Current_Observation.Precip_Today_In + " in", new Vector2(PanelBoundaryLeft + _PADDING, y), Colors.White, Fonts.PressStart2P12NoWrap);
+            y += 20;
+            args.DrawingSession.DrawText("Time since last data check: " + WeatherData.TimeSinceLastDataCheck, new Vector2(PanelBoundaryLeft + _PADDING, y), Colors.White, Fonts.PressStart2P12NoWrap);
+            y += 20;
+            args.DrawingSession.DrawText("Time until next data check: " + WeatherData.TimeUntilNextDataCheck, new Vector2(PanelBoundaryLeft + _PADDING, y), Colors.White, Fonts.PressStart2P12NoWrap);
         }
 
         public override void Update(CanvasAnimatedUpdateEventArgs args) {

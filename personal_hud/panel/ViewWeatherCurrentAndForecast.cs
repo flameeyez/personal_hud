@@ -9,12 +9,10 @@ using System.Threading.Tasks;
 namespace personal_hud {
     class ViewWeatherCurrentAndForecast : View {
         private ViewWeatherCurrentAndForecast() { }
-        public static ViewWeatherCurrentAndForecast Create(CanvasDevice device, int width, int height) {
+        public static ViewWeatherCurrentAndForecast Create(CanvasDevice device, int width, int height, int rightPanelWidth) {
             ViewWeatherCurrentAndForecast v = new ViewWeatherCurrentAndForecast();
 
             int nNumPanels = 7;
-
-            int rightPanelWidth = 300;
 
             int dayPanelWidth = (width - rightPanelWidth) / nNumPanels;
             int padding = (width - rightPanelWidth - dayPanelWidth * nNumPanels) / (nNumPanels - 1);
@@ -24,8 +22,7 @@ namespace personal_hud {
             }
 
             int dayPanelHeight = dayPanelWidth;
-            int fullLeftWidth = dayPanelWidth * nNumPanels + padding * (nNumPanels - 1);
-            rightPanelWidth = width - fullLeftWidth - (int)Panel._PADDING;
+            v.Width = dayPanelWidth * nNumPanels + padding * (nNumPanels - 1);
 
             float y = height - dayPanelWidth - Panel._PADDING;
 
@@ -34,8 +31,7 @@ namespace personal_hud {
                 v.Panels.Add(new PanelForecastDay(device, position, dayPanelWidth, dayPanelHeight, i));
             }
 
-            v.Panels.Add(new PanelCurrentWeather(device, new Vector2(Panel._PADDING, Panel._PADDING), fullLeftWidth, height - Panel._PADDING * 3 - dayPanelHeight));
-            v.Panels.Add(new PanelViews(device, new Vector2(fullLeftWidth + Panel._PADDING * 2, Panel._PADDING), rightPanelWidth, height - Panel._PADDING * 2));
+            v.Panels.Add(new PanelCurrentWeather(device, new Vector2(Panel._PADDING, Panel._PADDING), v.Width, height - Panel._PADDING * 3 - dayPanelHeight));
             return v;
         }
     }

@@ -12,10 +12,13 @@ using System.Threading.Tasks;
 
 namespace personal_hud {
     static class WeatherData {
-        private static double _weatherDataLastRefreshMilliseconds;
-        private static string Updates = string.Empty;
         // this is the last time the SOURCE (wunderground) updated its data; it won't necessarily change with each Refresh() call
         public static DateTime LastUpdate;
+        public static string TimeSinceLastDataCheck { get; set; }
+        public static string TimeUntilNextDataCheck { get; set; }
+        public static string DebugString { get; set; }
+
+        private static double _weatherDataLastRefreshMilliseconds = 0.0;
 
         public static Forecast10Day Forecast { get; set; }
         public static CurrentWeather Current { get; set; }
@@ -36,6 +39,24 @@ namespace personal_hud {
         public static async Task Update(CanvasAnimatedUpdateEventArgs args) {
             _weatherDataLastRefreshMilliseconds += args.Timing.ElapsedTime.TotalMilliseconds;
 
+            int seconds = (int)(_weatherDataLastRefreshMilliseconds / 1000) % 60;
+            int minutes = (int)((_weatherDataLastRefreshMilliseconds / (1000 * 60)) % 60);
+            int hours = (int)((_weatherDataLastRefreshMilliseconds / (1000 * 60 * 60)) % 24);
+            string strSeconds = seconds < 10 ? "0" + seconds.ToString() : seconds.ToString();
+            string strMinutes = minutes < 10 ? "0" + minutes.ToString() : minutes.ToString();
+            string strHours = hours.ToString();
+            TimeSinceLastDataCheck = strHours + ":" + strMinutes + "." + strSeconds;
+
+            double millisecondsToNextDataCheck = Statics._weatherDataRefreshThreshold - _weatherDataLastRefreshMilliseconds + 1000;
+            if(millisecondsToNextDataCheck < 0) { millisecondsToNextDataCheck = 0; }
+            int secondsRemaining = (int)(millisecondsToNextDataCheck / 1000) % 60;
+            int minutesRemaining = (int)((millisecondsToNextDataCheck / (1000 * 60)) % 60);
+            int hoursRemaining = (int)((millisecondsToNextDataCheck / (1000 * 60 * 60)) % 24);
+            string strSecondsRemaining = secondsRemaining < 10 ? "0" + secondsRemaining.ToString() : secondsRemaining.ToString();
+            string strMinutesRemaining = minutesRemaining < 10 ? "0" + minutesRemaining.ToString() : minutesRemaining.ToString();
+            string strHoursRemaining = hoursRemaining.ToString();
+            TimeUntilNextDataCheck = strHoursRemaining + ":" + strMinutesRemaining + "." + strSecondsRemaining;
+
             if (_weatherDataLastRefreshMilliseconds >= Statics._weatherDataRefreshThreshold) {
                 _weatherDataLastRefreshMilliseconds = 0;
 
@@ -45,21 +66,13 @@ namespace personal_hud {
                 // bail if refreshing fails for whatever reason (bad HTTP call, exception during deserialization, etc.)
                 // try again at next refresh
                 // TODO: investigate why JSON deserializer occasionally returns null values; add debug info to WeatherData
-                if (!f.IsValid) { return; }
-                if (!c.IsValid) { return; }
+                if (f == null || !f.IsValid) { return; }
+                if (c == null || !c.IsValid) { return; }
 
                 Forecast = f;
                 Current = c;
                 LastUpdate = DateTime.Parse(Current.Current_Observation.Observation_Time_RFC822);
-                lock (Debug.Lock) { Updates += Current.Current_Observation.Observation_Time + "\r\n"; }
-            }
-        }
-
-        public static string DebugString {
-            get {
-                string str = string.Empty;
-                lock (Debug.Lock) { str = Updates + "\r\n" + ((int)_weatherDataLastRefreshMilliseconds).ToString() + "\r\n" + Statics._weatherDataRefreshThreshold.ToString(); }
-                return str;
+                lock (Debug.Lock) { DebugString = DateTime.Now.ToString() + ": " + Current.Current_Observation.Observation_Time + "\r\n"; }
             }
         }
     }

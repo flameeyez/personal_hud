@@ -42,6 +42,7 @@ namespace personal_hud {
     public sealed partial class MainPage : Page {
         Dictionary<VIEW, View> Views = new Dictionary<VIEW, View>();
         View viewCurrent;
+        PanelViews PanelViews;
         List<AnimatedSprite> AnimatedSprites = new List<AnimatedSprite>();
         Point mouseCoordinates = new Point(0.0, 0.0);
 
@@ -55,7 +56,7 @@ namespace personal_hud {
                 viewCurrent.Draw(args, mouseCoordinates);
             }
 
-            args.DrawingSession.DrawText(WeatherData.DebugString, new Vector2(1500, 10), Colors.White);
+            PanelViews.Draw(args, mouseCoordinates);
 
             foreach (AnimatedSprite animatedSprite in AnimatedSprites) {
                 animatedSprite.Draw(args);
@@ -88,9 +89,13 @@ namespace personal_hud {
 
             int clientWidth = 1920 - (int)Panel._PADDING * 2;
             int clientHeight = 1080 - (int)Panel._PADDING * 2;
+            int rightPanelWidth = 300;
 
-            Views.Add(VIEW.CURRENT_WEATHER_AND_FORECAST, ViewWeatherCurrentAndForecast.Create(sender.Device, clientWidth, clientHeight));
+            ViewWeatherCurrentAndForecast vwcf = ViewWeatherCurrentAndForecast.Create(sender.Device, clientWidth, clientHeight, rightPanelWidth);
+            Views.Add(VIEW.CURRENT_WEATHER_AND_FORECAST, vwcf);
             viewCurrent = Views[VIEW.CURRENT_WEATHER_AND_FORECAST];
+
+            PanelViews = new PanelViews(sender.Device, new Vector2((float)vwcf.Width + Panel._PADDING * 2, Panel._PADDING), rightPanelWidth, clientHeight - Panel._PADDING * 2);
         }
 
         private void canvasMain_PointerMoved(object sender, PointerRoutedEventArgs e) {

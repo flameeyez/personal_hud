@@ -107,6 +107,7 @@ namespace personal_hud {
         }
 
         public override void Update(CanvasAnimatedUpdateEventArgs args) {
+            base.Update(args);
             if (_sprite != null) { _sprite.Update(args); }
         }
     }

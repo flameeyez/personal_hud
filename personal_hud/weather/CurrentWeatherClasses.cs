@@ -121,7 +121,7 @@ namespace personal_hud.current_weather {
             try {
                 HttpClient client = new HttpClient();
                 HttpResponseMessage response = await client.GetAsync("http://api.wunderground.com/api/023422a3f5a8324b/conditions/q/WA/Redmond.json");
-                if (response.IsSuccessStatusCode) {
+                if (response != null && response.IsSuccessStatusCode) {
                     CurrentWeather c = JsonConvert.DeserializeObject<CurrentWeather>(response.Content.ReadAsStringAsync().Result);
                     c.Current_Observation.Observation_Time = c.Current_Observation.Observation_Time.Replace("LANG.kLang.DateTime.", string.Empty);
                     return c;
@@ -130,7 +130,7 @@ namespace personal_hud.current_weather {
                     return null;
                 }
             }
-            catch {
+            catch(Exception e) {
                 return null;
             }
         }
